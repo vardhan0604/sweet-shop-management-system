@@ -31,9 +31,21 @@ export const searchSweets = async (req, res) => {
 
     let query = {};
 
-    // Only implement name search for now (TDD requirement)
+    // Name search (case-insensitive)
     if (name) {
-      query.name = { $regex: name, $options: "i" }; // case-insensitive search
+      query.name = { $regex: name, $options: "i" };
+    }
+
+    // Category search
+    if (category) {
+      query.category = { $regex: category, $options: "i" }; 
+    }
+
+    // Price range search
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
     }
 
     const sweets = await Sweet.find(query);
