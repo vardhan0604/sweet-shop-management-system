@@ -8,6 +8,12 @@ export default function Dashboard() {
 
   const [sweets, setSweets] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
   const [showAddForm, setShowAddForm] = useState(false);
 
   const [showEditForm, setShowEditForm] = useState(false);
@@ -26,6 +32,34 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const searchSweets = async () => {
+    setLoading(true);
+
+    try {
+      const params = {};
+
+      if (name) params.name = name;
+      if (category) params.category = category;
+      if (minPrice) params.minPrice = minPrice;
+      if (maxPrice) params.maxPrice = maxPrice;
+
+      const res = await api.get("/sweets/search", { params });
+      setSweets(res.data.data);
+    } catch (err) {
+      console.error("Search failed:", err.response?.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetFilters = () => {
+    setName("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+    fetchSweets();
   };
 
   // Purchase Sweet
@@ -67,6 +101,56 @@ export default function Dashboard() {
 
       {/* Header */}
       <h1 className="text-3xl font-bold mb-6">Available Sweets</h1>
+
+      {/*  Search + Filters */}
+      <div className="bg-white p-4 rounded-lg shadow-md mb-6 flex flex-col md:flex-row gap-4">
+
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
+
+        <input
+          type="text"
+          placeholder="Category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
+
+        <input
+          type="number"
+          placeholder="Min Price"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
+
+        <input
+          type="number"
+          placeholder="Max Price"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          className="border p-2 rounded w-full"
+        />
+
+        <button
+          onClick={searchSweets}
+          className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700"
+        >
+          Search
+        </button>
+
+        <button
+          onClick={resetFilters}
+          className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+        >
+          Reset
+        </button>
+      </div>
 
       {/* Add Sweet Button (Admin Only) */}
       {role === "admin" && (
