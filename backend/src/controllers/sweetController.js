@@ -55,3 +55,24 @@ export const searchSweets = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+export const updateSweet = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const updatedSweet = await Sweet.findByIdAndUpdate(id, req.body, {
+      new: true, // return updated document
+    });
+
+    if (!updatedSweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    return res.status(200).json({
+      message: "Sweet updated successfully",
+      data: updatedSweet,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
