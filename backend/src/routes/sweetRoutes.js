@@ -3,7 +3,8 @@ import {
   createSweet,
   getAllSweets,
   searchSweets,
-  updateSweet
+  updateSweet,
+  deleteSweet
 } from "../controllers/sweetController.js";
 
 const router = express.Router();
@@ -12,5 +13,6 @@ router.post("/", createSweet);
 router.get("/", getAllSweets);
 router.get("/search", searchSweets);
 router.put("/:id", updateSweet);
+router.delete("/:id", deleteSweet);
 
 export default router;
