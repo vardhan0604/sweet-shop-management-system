@@ -24,6 +24,16 @@ export default function Dashboard() {
     }
   };
 
+  const purchaseSweet = async (id) => {
+    try {
+        await api.post(`/sweets/${id}/purchase`);
+        fetchSweets(); 
+    } catch (err) {
+        console.error("Purchase failed:", err.response?.data);
+    }
+  };
+
+
   if (loading) {
     return <p className="text-center mt-10 text-xl">Loading sweets...</p>;
   }
@@ -57,6 +67,7 @@ export default function Dashboard() {
             </p>
 
             <button
+              onClick={() => purchaseSweet(sweet._id)}
               disabled={sweet.quantity === 0}
               className={`mt-4 w-full py-2 rounded-lg text-white transition 
               ${sweet.quantity === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-indigo-600 hover:bg-indigo-700"}
