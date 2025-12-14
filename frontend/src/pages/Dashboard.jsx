@@ -10,6 +10,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
 
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editSweet, setEditSweet] = useState(null);
+
   useEffect(() => {
     fetchSweets();
   }, []);
@@ -122,6 +125,16 @@ export default function Dashboard() {
                 </button>
 
                 <button
+                  onClick={() => {
+                    setEditSweet(sweet);
+                    setShowEditForm(true);
+                  }}
+                  className="w-full py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition"
+                >
+                  Edit
+                </button>
+
+                <button
                   onClick={() => deleteSweet(sweet._id)}
                   className="w-full py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
                 >
@@ -182,6 +195,85 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Edit Sweet Modal */}
+      {showEditForm && editSweet && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-xl">
+
+            <h2 className="text-2xl font-bold mb-4">Edit Sweet</h2>
+
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = new FormData(e.target);
+
+                const data = {
+                  name: form.get("name"),
+                  category: form.get("category"),
+                  price: Number(form.get("price")),
+                  quantity: Number(form.get("quantity")),
+                };
+
+                try {
+                  await api.put(`/sweets/${editSweet._id}`, data);
+                  fetchSweets();
+                  setShowEditForm(false);
+                } catch (err) {
+                  console.error("Update sweet failed:", err.response?.data);
+                }
+              }}
+              className="space-y-4"
+            >
+              <input
+                name="name"
+                defaultValue={editSweet.name}
+                placeholder="Name"
+                className="w-full border p-2 rounded"
+                required
+              />
+
+              <input
+                name="category"
+                defaultValue={editSweet.category}
+                placeholder="Category"
+                className="w-full border p-2 rounded"
+                required
+              />
+
+              <input
+                name="price"
+                type="number"
+                defaultValue={editSweet.price}
+                placeholder="Price"
+                className="w-full border p-2 rounded"
+                required
+              />
+
+              <input
+                name="quantity"
+                type="number"
+                defaultValue={editSweet.quantity}
+                placeholder="Quantity"
+                className="w-full border p-2 rounded"
+                required
+              />
+
+              <button className="w-full bg-yellow-600 text-white py-2 rounded-lg">
+                Save Changes
+              </button>
+            </form>
+
+            <button
+              className="mt-4 w-full py-2 bg-gray-300 rounded-lg"
+              onClick={() => setShowEditForm(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
