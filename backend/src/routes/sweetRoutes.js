@@ -5,7 +5,8 @@ import {
   searchSweets,
   updateSweet,
   deleteSweet,
-  purchaseSweet
+  purchaseSweet,
+  restockSweet
 } from "../controllers/sweetController.js";
 
 const router = express.Router();
@@ -16,5 +17,6 @@ router.get("/search", searchSweets);
 router.put("/:id", updateSweet);
 router.delete("/:id", deleteSweet);
 router.post("/:id/purchase", purchaseSweet);
+router.post("/:id/restock", restockSweet);
 
 export default router;
