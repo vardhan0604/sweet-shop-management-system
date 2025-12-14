@@ -38,4 +38,29 @@ describe("Sweets API", () => {
   expect(Array.isArray(res.body.data)).toBe(true);
   expect(res.body.data.length).toBeGreaterThan(0);
 });
+
+it("should search sweets by name", async () => {
+  // Create sample sweets
+  await request(app).post("/api/sweets").send({
+    name: "Milk Chocolate",
+    category: "Chocolate",
+    price: 80,
+    quantity: 20
+  });
+
+  await request(app).post("/api/sweets").send({
+    name: "Dark Chocolate",
+    category: "Chocolate",
+    price: 100,
+    quantity: 15
+  });
+
+  // Now search
+  const res = await request(app).get("/api/sweets/search?name=Milk");
+
+  expect(res.status).toBe(200);
+  expect(Array.isArray(res.body.data)).toBe(true);
+  expect(res.body.data.length).toBe(1);
+  expect(res.body.data[0].name).toBe("Milk Chocolate");
+});
 });
