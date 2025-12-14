@@ -155,4 +155,25 @@ it("should delete a sweet", async () => {
   const getRes = await request(app).get("/api/sweets");
   expect(getRes.body.data.length).toBe(0);
 });
+
+it("should purchase a sweet and reduce quantity by 1", async () => {
+  // Create a sweet
+  const createRes = await request(app).post("/api/sweets").send({
+    name: "Jelly Cup",
+    category: "Candy",
+    price: 25,
+    quantity: 5
+  });
+
+  const id = createRes.body.data._id;
+
+  // Purchase sweet
+  const purchaseRes = await request(app)
+    .post(`/api/sweets/${id}/purchase`)
+    .send();
+
+  expect(purchaseRes.status).toBe(200);
+  expect(purchaseRes.body.message).toBe("Sweet purchased successfully");
+  expect(purchaseRes.body.data.quantity).toBe(4); // reduced by 1
+});
 });
