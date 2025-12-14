@@ -199,7 +199,7 @@ Below are screenshots of the Sweet Shop Management System.
 ## 🏠 User Dashboard
 Shows available sweets, purchase button, filters, etc.
 
-![User Dashboard](screenshots/dashboard_user.png)![alt text](image.png)
+![User Dashboard](screenshots/dashboard_user.png)
 
 
 
