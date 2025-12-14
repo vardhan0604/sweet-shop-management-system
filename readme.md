@@ -211,7 +211,25 @@ Shows admin controls like add, edit, delete, restock sweet.
 
 
 ------------------------------------------------------------------------
+# 🧪 Test Report
 
+The backend test suite was executed using **Jest + Supertest**.
+
+You can view the full detailed report here:
+
+👉 [`reports/test-results.json`](backend/reports/test-results.json)
+
+This file contains:
+- Test execution results
+- Number of passed/failed tests
+- Execution time
+- Test suite structure
+
+A screenshot of the test output is also included below:
+
+![Test Report Screenshot](backend/reports/test-report.png)
+
+------------------------------------------------------------------------
 # 📝 My AI Usage
 
 I actively used AI tools (ChatGPT) during the development of this
