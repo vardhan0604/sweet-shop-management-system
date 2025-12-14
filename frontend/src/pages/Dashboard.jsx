@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { createAxiosInstance } from "../api/axiosInstance";
+import toast from "react-hot-toast";
+import Loader from "../components/Loader";
+
 
 export default function Dashboard() {
   const { token, role } = useAuth();
@@ -28,6 +31,7 @@ export default function Dashboard() {
       const res = await api.get("/sweets");
       setSweets(res.data.data);
     } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
       console.error("Error fetching sweets:", err.response?.data);
     } finally {
       setLoading(false);
@@ -48,6 +52,7 @@ export default function Dashboard() {
       const res = await api.get("/sweets/search", { params });
       setSweets(res.data.data);
     } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
       console.error("Search failed:", err.response?.data);
     } finally {
       setLoading(false);
@@ -67,7 +72,9 @@ export default function Dashboard() {
     try {
       await api.post(`/sweets/${id}/purchase`);
       fetchSweets();
+      toast.success("Purchased successfully!");
     } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
       console.error("Purchase failed:", err.response?.data);
     }
   };
@@ -77,7 +84,9 @@ export default function Dashboard() {
     try {
       await api.post(`/sweets/${id}/restock`);
       fetchSweets();
+      toast.success("Restocked!");
     } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
       console.error("Restock failed:", err.response?.data);
     }
   };
@@ -87,13 +96,15 @@ export default function Dashboard() {
     try {
       await api.delete(`/sweets/${id}`);
       fetchSweets();
+      toast.success("Deleted successfully!");
     } catch (err) {
+      toast.error(err.response?.data?.message || "Something went wrong");
       console.error("Delete failed:", err.response?.data);
     }
   };
 
   if (loading) {
-    return <p className="text-center mt-10 text-xl">Loading sweets...</p>;
+    return <Loader />;
   }
 
   return (
@@ -167,7 +178,7 @@ export default function Dashboard() {
         {sweets.map((sweet) => (
           <div
             key={sweet._id}
-            className="bg-white shadow-lg rounded-lg p-5 border"
+            className="bg-white shadow-md hover:shadow-xl hover:-translate-y-1 transition rounded-xl p-5 border"
           >
             <h2 className="text-xl font-semibold mb-2">{sweet.name}</h2>
 
@@ -253,8 +264,10 @@ export default function Dashboard() {
                 try {
                   await api.post("/sweets", data);
                   fetchSweets();
+                  toast.success("Sweet added!");
                   setShowAddForm(false);
                 } catch (err) {
+                  toast.error(err.response?.data?.message || "Something went wrong");
                   console.error("Add sweet failed:", err.response?.data);
                 }
               }}
@@ -302,8 +315,10 @@ export default function Dashboard() {
                 try {
                   await api.put(`/sweets/${editSweet._id}`, data);
                   fetchSweets();
+                  toast.success("Sweet updated!");
                   setShowEditForm(false);
                 } catch (err) {
+                  toast.error(err.response?.data?.message || "Something went wrong");
                   console.error("Update sweet failed:", err.response?.data);
                 }
               }}
