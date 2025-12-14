@@ -133,4 +133,26 @@ it("should update a sweet", async () => {
   expect(updateRes.body.data.name).toBe("Lollipop XL");
   expect(updateRes.body.data.price).toBe(8);
 });
+
+it("should delete a sweet", async () => {
+  // Create a sweet first
+  const createRes = await request(app).post("/api/sweets").send({
+    name: "Toffee",
+    category: "Candy",
+    price: 5,
+    quantity: 50
+  });
+
+  const id = createRes.body.data._id;
+
+  // Delete that sweet
+  const deleteRes = await request(app).delete(`/api/sweets/${id}`);
+
+  expect(deleteRes.status).toBe(200);
+  expect(deleteRes.body.message).toBe("Sweet deleted successfully");
+
+  // Confirm it is gone
+  const getRes = await request(app).get("/api/sweets");
+  expect(getRes.body.data.length).toBe(0);
+});
 });
