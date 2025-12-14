@@ -19,6 +19,14 @@ describe("Auth API", () => {
   });
 
   it("should log in a user", async () => {
+    
+    await request(app)
+    .post("/api/auth/register")
+    .send({
+      email: "test@example.com",
+      password: "password123"
+    });
+
     const res = await request(app)
       .post("/api/auth/login")
       .send({
