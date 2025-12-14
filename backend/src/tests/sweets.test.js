@@ -176,4 +176,25 @@ it("should purchase a sweet and reduce quantity by 1", async () => {
   expect(purchaseRes.body.message).toBe("Sweet purchased successfully");
   expect(purchaseRes.body.data.quantity).toBe(4); // reduced by 1
 });
+
+it("should restock a sweet and increase quantity by 1", async () => {
+  // Create a sweet
+  const createRes = await request(app).post("/api/sweets").send({
+    name: "Mint Candy",
+    category: "Candy",
+    price: 15,
+    quantity: 2
+  });
+
+  const id = createRes.body.data._id;
+
+  // Restock sweet
+  const restockRes = await request(app)
+    .post(`/api/sweets/${id}/restock`)
+    .send();
+
+  expect(restockRes.status).toBe(200);
+  expect(restockRes.body.message).toBe("Sweet restocked successfully");
+  expect(restockRes.body.data.quantity).toBe(3); // increased by 1
+});
 });
