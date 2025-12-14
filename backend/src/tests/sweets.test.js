@@ -108,4 +108,29 @@ it("should search sweets by price range", async () => {
   expect(res.body.data.length).toBe(1);
   expect(res.body.data[0].price).toBe(80);
 });
+
+it("should update a sweet", async () => {
+  // Create sweet first
+  const createRes = await request(app).post("/api/sweets").send({
+    name: "Lollipop",
+    category: "Candy",
+    price: 5,
+    quantity: 10
+  });
+
+  const id = createRes.body.data._id;
+
+  // Update sweet
+  const updateRes = await request(app).put(`/api/sweets/${id}`).send({
+    name: "Lollipop XL",
+    category: "Candy",
+    price: 8,
+    quantity: 20
+  });
+
+  expect(updateRes.status).toBe(200);
+  expect(updateRes.body.message).toBe("Sweet updated successfully");
+  expect(updateRes.body.data.name).toBe("Lollipop XL");
+  expect(updateRes.body.data.price).toBe(8);
+});
 });
